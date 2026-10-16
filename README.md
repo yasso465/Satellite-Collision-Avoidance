@@ -34,6 +34,14 @@ Find low-total-ΔV impulsive maneuvers that avoid close approaches to catalogued
 
 Compared with the earlier 0.90 m/s reference maneuver, C63 uses **33.3% less ΔV**. This is not a proof of global optimality.
 
+## Published result files
+
+- [Nominal retained-catalog validation summary](results/early_burn_full_catalog_summary.csv)
+- [Paired 10,000-trial Monte Carlo summary](results/early_burn_mc_10000_summary.csv)
+- [C63 excluded-object validation summary](docs/C63_EXCLUDED_VALIDATION.md)
+
+The full row-level CSVs and TLE input files are available in the local research archive but have not all been committed to this repository yet.
+
 ## Method
 
 1. Filter the original 16,883-entry TLE catalog to identify candidate close approaches.
@@ -51,7 +59,7 @@ These are **assumed uncertainties**, not covariance estimates inferred from the 
 ## Validation scope and limitations
 
 - The retained-catalog validation covered **10,866 objects**, with no SGP4 errors reported in that run.
-- The original catalog contains **16,883 objects**, including **6,017 initially excluded**. Results for the excluded set should be published alongside the corresponding final validation log/CSV before making a consolidated full-catalog claim.
+- The original catalog contains **16,883 objects**, including **6,017 initially excluded**. A separate **C63-specific** excluded-object CSV was supplied and checked: **6,014 of 6,017** excluded objects propagated successfully, with a minimum 1-second sampled separation of **60.872769 km** (NORAD 47945); three objects (58274, 58285, 60491) could not be added to the scenario. See [excluded validation summary](docs/C63_EXCLUDED_VALIDATION.md). Thus 16,880 of 16,883 catalog entries were numerically checked across the retained and excluded sets; three remain unvalidated.
 - Three SGP4 failures were previously identified for NORAD **58274, 58285, 60491**. Propagation failure does not independently establish atmospheric reentry.
 - Monte Carlo perturbations were assessed in selected **local windows**, not as an exhaustive perturbed full-catalog scan.
 - Numerical sampling at 1 s and 0.1 s does not establish a rigorous continuous-time lower bound.

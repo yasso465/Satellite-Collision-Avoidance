@@ -1,0 +1,1 @@
+Upload folders data/, results/, figures/, and src/ into the GitHub repository. Avoid overwriting the newer README.md and docs already online. GitHub browser Upload files supports multiple files and folders. Confirm permission to redistribute catalog TLE data. This package is not a MATLAB runtime validation.

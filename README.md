@@ -1,0 +1,81 @@
+# Satellite Collision Avoidance — Two-Impulse Maneuver Optimization
+
+MATLAB numerical study for the MathWorks Satellite Collision Avoidance challenge (#225).
+
+> **Status: research prototype.** This repository is being assembled. The MATLAB source code, input TLE catalogs, result CSVs, and animations are not yet all uploaded. The 10.5 km distance is an **experimental screening threshold**, not a physical collision criterion.
+
+## Objective
+
+Find low-total-ΔV impulsive maneuvers that avoid close approaches to catalogued orbital debris and return a spacecraft to approximately its initial orbital elements over a three-hour simulation.
+
+- Epoch: **2026-10-12 00:00 UTC**
+- Duration: **10,800 s**
+- Initial spacecraft orbit: circular, **500 km** altitude, **51.6°** inclination
+- Spacecraft model: two-body Keplerian propagation with impulsive tangential burns
+- Debris model: SGP4 propagation from three-line TLE records
+- Return-orbit tolerances tested: |Δa| ≤ **5 km**, |Δe| ≤ **0.001**
+
+## Selected candidate: C63
+
+| Quantity | Value |
+|---|---:|
+| First burn time | 2,600 s (00:43:20 UTC) |
+| First tangential ΔV | −0.40 m/s |
+| Second burn time | 8,000 s (02:13:20 UTC) |
+| Second tangential ΔV | +0.20 m/s |
+| Total ΔV | **0.60 m/s** |
+| Final semi-major-axis difference | **0.361384 km** |
+| Final eccentricity difference | **0.000057205** |
+| Closest nominal approach in 10,866 retained objects (locally refined to 0.1 s) | **11.735 km** |
+| Object at closest nominal approach | NORAD **44804** |
+| Local Monte Carlo trials | **10,000** |
+| Trials with minimum below 10.5 km | **0 observed** |
+| Smallest separation observed in local Monte Carlo | **10.608 km** |
+
+Compared with the earlier 0.90 m/s reference maneuver, C63 uses **33.3% less ΔV**. This is not a proof of global optimality.
+
+## Method
+
+1. Filter the original 16,883-entry TLE catalog to identify candidate close approaches.
+2. Propagate the nominal spacecraft trajectory and SGP4 debris trajectories.
+3. Screen two-burn maneuvers for minimum separation, total ΔV, and return-orbit tolerances.
+4. Validate promising candidates against the **10,866 retained objects**, using 1-second global sampling and 0.1-second refinement around close encounters.
+5. Compare candidates using paired Monte Carlo perturbations in **29 local encounter windows**.
+
+### Uncertainty assumptions
+
+The local Monte Carlo assumed independent Gaussian perturbations: debris position σ=250 m per inertial axis, debris velocity σ=0.05 m/s per axis, burn timing σ=1 s, tangential burn magnitude σ=0.01 m/s, and radial/normal burn components σ=0.005 m/s per axis.
+
+These are **assumed uncertainties**, not covariance estimates inferred from the TLEs. Consequently, the observed fraction of runs below the experimental 10.5 km threshold is **not** a physical collision probability.
+
+## Validation scope and limitations
+
+- The retained-catalog validation covered **10,866 objects**, with no SGP4 errors reported in that run.
+- The original catalog contains **16,883 objects**, including **6,017 initially excluded**. Results for the excluded set should be published alongside the corresponding final validation log/CSV before making a consolidated full-catalog claim.
+- Three SGP4 failures were previously identified for NORAD **58274, 58285, 60491**. Propagation failure does not independently establish atmospheric reentry.
+- Monte Carlo perturbations were assessed in selected **local windows**, not as an exhaustive perturbed full-catalog scan.
+- Numerical sampling at 1 s and 0.1 s does not establish a rigorous continuous-time lower bound.
+- The project does **not** currently include a trained AI model.
+
+## Reproduction
+
+**Software:** MATLAB R2026b, with Aerospace Toolbox for SGP4/TLE workflows. Additional dependencies will be documented alongside the final source files.
+
+The reproducible MATLAB entry point, the required TLE files, and generated result CSVs are **pending upload**. Once available, this section will provide exact commands, expected runtimes, and output files. Until then, this repository is documentation only.
+
+## Planned repository layout
+
+```text
+Satellite-Collision-Avoidance/
+├── README.md
+├── LICENSE
+├── src/          # MATLAB simulations, search, validation
+├── data/         # TLE input and example subset
+├── results/      # Numerical CSV summaries
+├── figures/      # Plots
+└── animations/   # 3D scenario and close-approach videos
+```
+
+## License
+
+MIT (see LICENSE when added).

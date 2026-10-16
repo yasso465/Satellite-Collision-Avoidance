@@ -57,6 +57,10 @@ These are **assumed uncertainties**, not covariance estimates inferred from the 
 - Numerical sampling at 1 s and 0.1 s does not establish a rigorous continuous-time lower bound.
 - The project does **not** currently include a trained AI model.
 
+## Quick start: standalone spacecraft demo
+
+Run `src/demo_C63_two_body.m` in MATLAB. This standalone example plots the baseline orbit and the C63 two-burn trajectory, and prints final orbital-element differences. It does **not** propagate debris or validate closest approaches. The full validation scripts and TLE inputs are still pending upload.
+
 ## Reproduction
 
 **Software:** MATLAB R2026b, with Aerospace Toolbox for SGP4/TLE workflows. Additional dependencies will be documented alongside the final source files.

@@ -7,8 +7,11 @@ exportMP4 = false; fps = 24; frameStep = 20; % simulation seconds/frame
 noradIDs = ["44804","54771"]; % critical retained-catalog encounters
 startUTC = datetime(2026,10,12,0,0,0,'TimeZone','UTC');
 durationS = 10800; mu = 3.986004418e14; Re = 6378137;
-tlePath = fullfile('data','debris_matlab.tle');
-assert(isfile(tlePath),'Run from repository root: data/debris_matlab.tle missing.');
+% Resolve paths relative to this script, not MATLAB's current directory.
+scriptDir = fileparts(mfilename('fullpath'));
+projectRoot = fileparts(scriptDir);
+tlePath = fullfile(projectRoot,'data','debris_matlab.tle');
+assert(isfile(tlePath), 'TLE missing at: %s', tlePath);
 % Extract only the requested actual TLE records, preserving 3-line format.
 lines = readlines(tlePath); lines = lines(strlength(strtrim(lines))>0);
 assert(mod(numel(lines),3)==0,'Expected 3-line TLE catalog.');
@@ -93,8 +96,9 @@ title(ax2,'Distance to selected debris (20 s samples)');
 legend(ax2,'Location','best');set(ax2,'YScale','log');
 video=[];
 if exportMP4
-    if ~isfolder('animations'),mkdir('animations');end
-    video=VideoWriter(fullfile('animations','C63_SGP4_encounters.mp4'),'MPEG-4');
+    animationDir=fullfile(projectRoot,'animations');
+    if ~isfolder(animationDir),mkdir(animationDir);end
+    video=VideoWriter(fullfile(animationDir,'C63_SGP4_encounters.mp4'),'MPEG-4');
     video.FrameRate=fps;open(video);
 end
 for j=1:N

@@ -1,0 +1,11 @@
+*.asv
+*.m~
+*.autosave
+*.slxc
+slprj/
+codegen/
+*.mat
+.DS_Store
+Thumbs.db
+# Large/raw TLE catalogs should be included only if redistribution is permitted.
+# Keep local outputs out of version control until reviewed.

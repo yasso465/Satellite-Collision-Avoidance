@@ -4,6 +4,21 @@ MATLAB numerical study for the MathWorks Satellite Collision Avoidance challenge
 
 > **Status: research prototype.** MATLAB source files, TLE catalogs and detailed result CSVs have been uploaded; a clean-checkout MATLAB reproduction test and final animations are still pending. The 10.5 km distance is an **experimental screening threshold**, not a physical collision criterion.
 
+## At a glance
+
+| Metric | C63 result |
+|---|---:|
+| Total maneuver budget | **0.60 m/s** |
+| Reduction vs. earlier 0.90 m/s reference | **33.3%** |
+| Closest nominal retained-catalog approach (0.1 s local refinement) | **11.735 km** |
+| Successful original-catalog propagations across both validation sets | **16,880 / 16,883** |
+| Modeled Monte Carlo threshold crossings (<10.5 km) | **0 / 10,000** |
+| Orbital-return checks passed in local Monte Carlo | **10,000 / 10,000** |
+
+![C3 and C63 modeled threshold crossings](figures/threshold_crossings.svg)
+
+*Figure: counts below the experimental 10.5 km screening threshold under the stated hypothetical uncertainty model. Zero observed crossings is not zero physical collision risk.*
+
 ## Objective
 
 Find low-total-ΔV impulsive maneuvers that avoid close approaches to catalogued orbital debris and return a spacecraft to approximately its initial orbital elements over a three-hour simulation.
@@ -33,6 +48,16 @@ Find low-total-ΔV impulsive maneuvers that avoid close approaches to catalogued
 | Smallest separation observed in local Monte Carlo | **10.608 km** |
 
 Compared with the earlier 0.90 m/s reference maneuver, C63 uses **33.3% less ΔV**. This is not a proof of global optimality.
+
+## Candidate comparison
+
+| Candidate | Total ΔV (m/s) | Minimum nominal separation, locally refined (km) | Modeled trials below 10.5 km |
+|---|---:|---:|---:|
+| C3 | 0.50 | 11.373 | 11 / 10,000 |
+| **C63 (selected)** | **0.60** | **11.735** | **0 / 10,000** |
+| C123 | 0.70 | 11.749 | Not evaluated in the paired 10,000-trial study |
+
+C63 was selected as a **trade-off** between maneuver cost and modeled robustness; the search does not prove global optimality.
 
 ## Published result files
 
@@ -67,7 +92,38 @@ These are **assumed uncertainties**, not covariance estimates inferred from the 
 
 ## Quick start: standalone spacecraft demo
 
+Download the repository as ZIP or clone it. In MATLAB, set the **Current Folder to the repository root**, then run:
+
+```matlab
+run('src/demo_C63_two_body.m')
+```
+
+Expected console output (approximately):
+
+```text
+C63 total DV: 0.600 m/s
+Final |Delta a|: 0.361382 km
+Final eccentricity: 0.000057205
+Orbit tolerance pass: 1
+```
+
 Run `src/demo_C63_two_body.m` in MATLAB. This standalone example plots the baseline orbit and the C63 two-burn trajectory, and prints final orbital-element differences. It does **not** propagate debris or validate closest approaches. The validation scripts and TLE inputs are present in this repository, but their clean-checkout execution has not yet been verified.
+
+## Inspect the published numerical results
+
+From the repository root in MATLAB:
+
+```matlab
+disp(readtable('results/early_burn_full_catalog_summary.csv'))
+disp(readtable('results/early_burn_mc_10000_summary.csv'))
+
+E = readtable('results/C63_excluded_validation.csv');
+ok = strcmp(string(E.Status), "OK");
+fprintf('Excluded propagated: %d, errors: %d, minimum: %.6f km\\n', ...
+    sum(ok), sum(~ok), min(E.Min_1s_km(ok)));
+```
+
+The expected excluded-object output is **6,014 propagated, 3 errors, minimum 60.872769 km**. These commands **read saved results**; they do not rerun SGP4 or Monte Carlo.
 
 ## Reproduction
 

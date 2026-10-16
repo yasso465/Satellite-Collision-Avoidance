@@ -76,7 +76,7 @@ for k=1:numel(noradIDs)
     ps=positionsAt(sols,fineT{k},t1,t2);
     fineD{k}=vecnorm(pf-ps,2,1)/1000;
     [dm,im]=min(fineD{k});
-    fprintf('NORAD %s: fine-grid min %.6f km at t=%.1f s\\n',noradIDs(k),dm,fineT{k}(im));
+    fprintf('NORAD %s: fine-grid min %.6f km at t=%.1f s\n',noradIDs(k),dm,fineT{k}(im));
 end
 % Layout: inertial overview and encounter-distance histories.
 fig=figure('Color','w','Position',[80 80 1300 650]);
@@ -154,7 +154,7 @@ for j=1:N
     drawnow;
     if exportMP4,writeVideo(video,getframe(fig));end
 end
-if exportMP4,close(video);fprintf('Saved to %s\\n',fullfile(projectRoot,'animations','C63_SGP4_encounters_V2.mp4'));end
+if exportMP4,close(video);fprintf('Saved to %s\n',fullfile(projectRoot,'animations','C63_SGP4_encounters_V2.mp4'));end
 fprintf('Done. Selected-object visualization only; not full-catalog revalidation.\n');
 function dy=rhs(y,mu)
 r=y(1:3);dy=[y(4:6);-mu*r/norm(r)^3];

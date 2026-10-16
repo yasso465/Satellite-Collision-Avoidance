@@ -21,7 +21,7 @@
 3. `monte_carlo_early_burn_10000.m` — paired local Monte Carlo for C3/C63.
 4. `validate_C63_excluded.m` — separate validation of objects excluded during filtering; review the resulting log before making full-original-catalog claims.
 
-These scripts are **not yet published in this repository**. The sequence documents the existing workflow; it is not an executable quick-start until code and input files are uploaded and checked.
+The four MATLAB scripts are now published in `src/`. The full validation workflows still require the TLE and CSV input files listed above; the scripts have not been re-executed from a clean checkout. The standalone `src/demo_C63_two_body.m` can be run without those data files.
 
 ## Scientific caution
 

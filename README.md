@@ -2,7 +2,7 @@
 
 MATLAB numerical study for the MathWorks Satellite Collision Avoidance challenge (#225).
 
-> **Status: research prototype.** This repository is being assembled. The MATLAB source code, input TLE catalogs, result CSVs, and animations are not yet all uploaded. The 10.5 km distance is an **experimental screening threshold**, not a physical collision criterion.
+> **Status: research prototype.** MATLAB source files, TLE catalogs and detailed result CSVs have been uploaded; a clean-checkout MATLAB reproduction test and final animations are still pending. The 10.5 km distance is an **experimental screening threshold**, not a physical collision criterion.
 
 ## Objective
 
@@ -40,7 +40,7 @@ Compared with the earlier 0.90 m/s reference maneuver, C63 uses **33.3% less ΔV
 - [Paired 10,000-trial Monte Carlo summary](results/early_burn_mc_10000_summary.csv)
 - [C63 excluded-object validation summary](docs/C63_EXCLUDED_VALIDATION.md)
 
-The full row-level CSVs and TLE input files are available in the local research archive but have not all been committed to this repository yet.
+The full row-level CSVs and TLE inputs are now included in [`results/`](results/) and [`data/`](data/).
 
 ## Method
 
@@ -67,15 +67,15 @@ These are **assumed uncertainties**, not covariance estimates inferred from the 
 
 ## Quick start: standalone spacecraft demo
 
-Run `src/demo_C63_two_body.m` in MATLAB. This standalone example plots the baseline orbit and the C63 two-burn trajectory, and prints final orbital-element differences. It does **not** propagate debris or validate closest approaches. The full validation scripts and TLE inputs are still pending upload.
+Run `src/demo_C63_two_body.m` in MATLAB. This standalone example plots the baseline orbit and the C63 two-burn trajectory, and prints final orbital-element differences. It does **not** propagate debris or validate closest approaches. The validation scripts and TLE inputs are present in this repository, but their clean-checkout execution has not yet been verified.
 
 ## Reproduction
 
 **Software:** MATLAB R2026b, with Aerospace Toolbox for SGP4/TLE workflows. Additional dependencies will be documented alongside the final source files.
 
-The reproducible MATLAB entry point, the required TLE files, and generated result CSVs are **pending upload**. Once available, this section will provide exact commands, expected runtimes, and output files. Until then, this repository is documentation only.
+The MATLAB scripts, required TLE files, and generated result CSVs are now available. See [running instructions](docs/RUNNING.md) and [data manifest](docs/DATA_MANIFEST.md). **Important:** the scripts have not yet been re-executed from a clean checkout, and some may expect input files in the MATLAB current folder rather than in `data/` or `results/`. A tested one-command reproduction workflow is still pending.
 
-## Planned repository layout
+## Repository layout
 
 ```text
 Satellite-Collision-Avoidance/

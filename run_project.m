@@ -32,7 +32,7 @@ switch mode
     case "demo"
         fprintf('\n=== Satellite Collision Avoidance: C63 demo ===\n');
         fprintf('This quick demo propagates the spacecraft only; it does NOT screen debris.\n\n');
-        executeScript(fullfile(sourceDir, 'demo_C63_two_body.m'), projectRoot);
+        executeScript(fullfile(sourceDir, 'demo_C63_two_body.m'));
         fprintf('\nDemo finished. For the catalog-based study, run run_project("full").\n');
 
     case "full"

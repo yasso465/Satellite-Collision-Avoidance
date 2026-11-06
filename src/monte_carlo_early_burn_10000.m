@@ -3,7 +3,11 @@
 % Requires debris_matlab.tle and early_burn_full_catalog_results.csv
 % Run from project directory. Local risk screening, NOT collision probability.
 clear;clc;
-fileTLE='debris_matlab.tle';fileCSV='early_burn_full_catalog_results.csv';
+projectRoot = fileparts(fileparts(mfilename('fullpath')));
+dataDir = fullfile(projectRoot, 'data');
+resultsDir = fullfile(projectRoot, 'results');
+fileTLE = fullfile(dataDir, 'debris_matlab.tle');
+fileCSV = fullfile(resultsDir, 'early_burn_full_catalog_results.csv');
 assert(isfile(fileTLE)&&isfile(fileCSV),'Missing TLE or full-catalog CSV');
 N=10000; rng(20261016,'twister'); thresholdKm=10.5;
 sigmaP=250;sigmaV=0.05;sigmaTime=1;sigmaTang=0.01;sigmaCross=0.005;
@@ -129,7 +133,7 @@ trial=(1:N)';R=table(trial,resMin(:,1),resMin(:,2),resWorst(:,1), ...
     'C3_WorstObject','C63_WorstObject','C3_TCA_s','C63_TCA_s', ...
     'C3_DeltaA_km','C63_DeltaA_km','C3_DeltaE','C63_DeltaE', ...
     'C3_OrbitPass','C63_OrbitPass'});
-writetable(R,'early_burn_mc_10000_trials.csv');
+writetable(R,fullfile(resultsDir,'early_burn_mc_10000_trials.csv'));
 S=table('Size',[2 9],'VariableTypes', ...
     {'string','double','double','double','double','double','double','double','double'}, ...
     'VariableNames',{'Candidate','DV_mps','Breaches10p5','Rate_percent', ...
@@ -142,7 +146,7 @@ for k=1:2
     S.P01_km(k)=qq(1);S.P05_km(k)=qq(2);
     S.OrbitPassCount(k)=nnz(resPass(:,k));S.Trials(k)=N;
 end
-writetable(S,'early_burn_mc_10000_summary.csv');
+writetable(S,fullfile(resultsDir,'early_burn_mc_10000_summary.csv'));
 fprintf('\n===== PAIRED 10000-TRIAL MONTE CARLO =====\n');disp(S);
 fprintf('Paired comparison C63 > C3 separation in %.2f%% of trials\n', ...
     100*mean(resMin(:,2)>resMin(:,1)));

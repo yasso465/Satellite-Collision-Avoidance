@@ -5,7 +5,11 @@
 % Propagation errors reported, NEVER silently excluded.
 % NOTE: Numerical screening only, not a continuous-time proof.
 clear; clc;
-tleFile='debris_matlab.tle';
+projectRoot = fileparts(fileparts(mfilename('fullpath')));
+dataDir = fullfile(projectRoot, 'data');
+resultsDir = fullfile(projectRoot, 'results');
+if ~isfolder(resultsDir), mkdir(resultsDir); end
+tleFile = fullfile(dataDir, 'debris_matlab.tle');
 assert(isfile(tleFile),'Missing debris_matlab.tle');
 startTime=datetime(2026,10,12,0,0,0,'TimeZone','UTC');
 missionLength=10800; mu=3.986004418e14; Re=6378137;
@@ -18,8 +22,8 @@ burns=[2600 8000 -0.40 +0.10; ...
 thresholdKm=10.5; refineIfBelowKm=30;
 fineStep=0.1; fineHalfWindow=12;
 coarseStep=1; progressEvery=100;
-outCSV='early_burn_full_catalog_results.csv';
-summaryCSV='early_burn_full_catalog_summary.csv';
+outCSV = fullfile(resultsDir, 'early_burn_full_catalog_results.csv');
+summaryCSV = fullfile(resultsDir, 'early_burn_full_catalog_summary.csv');
 lines=readlines(tleFile);lines=lines(strlength(strtrim(lines))>0);
 assert(mod(numel(lines),3)==0,'Expected 3-line TLE');
 nObj=numel(lines)/3; nC=size(burns,1);

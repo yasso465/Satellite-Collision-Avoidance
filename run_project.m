@@ -56,24 +56,31 @@ switch mode
         end
 
         workDir = tempname;
+        originalDirectory = pwd;
         mkdir(workDir);
-        cleanupWork = onCleanup(@() removeWorkDirectory(workDir)); %#ok<NASGU>
+        cleanupWork = onCleanup(@() cleanupFullRun(workDir, originalDirectory)); %#ok<NASGU>
         for k = 1:numel(required)
             copyfile(fullfile(dataDir, required(k)), workDir);
         end
 
         fprintf('\n[1/3] Nominal retained-catalog validation...\n');
-        executeScript(fullfile(sourceDir, 'validate_early_burn_full_catalog.m'), workDir);
+        cd(workDir);
+        executeScript(fullfile(sourceDir, 'validate_early_burn_full_catalog.m'));
+        cd(projectRoot);
         copyResult(workDir, resultsDir, 'early_burn_full_catalog_results.csv');
         copyResult(workDir, resultsDir, 'early_burn_full_catalog_summary.csv');
 
         fprintf('\n[2/3] Paired 10,000-trial Monte Carlo...\n');
-        executeScript(fullfile(sourceDir, 'monte_carlo_early_burn_10000.m'), workDir);
+        cd(workDir);
+        executeScript(fullfile(sourceDir, 'monte_carlo_early_burn_10000.m'));
+        cd(projectRoot);
         copyResult(workDir, resultsDir, 'early_burn_mc_10000_trials.csv');
         copyResult(workDir, resultsDir, 'early_burn_mc_10000_summary.csv');
 
         fprintf('\n[3/3] Excluded-object C63 validation...\n');
-        executeScript(fullfile(sourceDir, 'validate_C63_excluded.m'), workDir);
+        cd(workDir);
+        executeScript(fullfile(sourceDir, 'validate_C63_excluded.m'));
+        cd(projectRoot);
         copyResult(workDir, resultsDir, 'C63_excluded_validation.csv');
 
         fprintf('\n=== PIPELINE FINISHED ===\n');
@@ -86,13 +93,10 @@ switch mode
 end
 end
 
-function executeScript(scriptPath, workingDirectory)
+function executeScript(scriptPath)
 if ~isfile(scriptPath)
     error('run_project:MissingScript', 'Cannot find script: %s', scriptPath);
 end
-previousDirectory = pwd;
-restoreDirectory = onCleanup(@() cd(previousDirectory)); %#ok<NASGU>
-cd(workingDirectory);
 run(scriptPath);
 end
 
@@ -105,7 +109,10 @@ end
 copyfile(sourceFile, fullfile(destinationDirectory, fileName), 'f');
 end
 
-function removeWorkDirectory(workDirectory)
+function cleanupFullRun(workDirectory, originalDirectory)
+if isfolder(originalDirectory)
+    cd(originalDirectory);
+end
 if isfolder(workDirectory)
     rmdir(workDirectory, 's');
 end

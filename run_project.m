@@ -55,33 +55,14 @@ switch mode
                 'Aerospace Toolbox license is not available in this MATLAB session.');
         end
 
-        workDir = tempname;
-        originalDirectory = pwd;
-        mkdir(workDir);
-        cleanupWork = onCleanup(@() cleanupFullRun(workDir, originalDirectory)); %#ok<NASGU>
-        for k = 1:numel(required)
-            copyfile(fullfile(dataDir, required(k)), workDir);
-        end
-
         fprintf('\n[1/3] Nominal retained-catalog validation...\n');
-        cd(workDir);
         executeScript(fullfile(sourceDir, 'validate_early_burn_full_catalog.m'));
-        cd(projectRoot);
-        copyResult(workDir, resultsDir, 'early_burn_full_catalog_results.csv');
-        copyResult(workDir, resultsDir, 'early_burn_full_catalog_summary.csv');
 
         fprintf('\n[2/3] Paired 10,000-trial Monte Carlo...\n');
-        cd(workDir);
         executeScript(fullfile(sourceDir, 'monte_carlo_early_burn_10000.m'));
-        cd(projectRoot);
-        copyResult(workDir, resultsDir, 'early_burn_mc_10000_trials.csv');
-        copyResult(workDir, resultsDir, 'early_burn_mc_10000_summary.csv');
 
         fprintf('\n[3/3] Excluded-object C63 validation...\n');
-        cd(workDir);
         executeScript(fullfile(sourceDir, 'validate_C63_excluded.m'));
-        cd(projectRoot);
-        copyResult(workDir, resultsDir, 'C63_excluded_validation.csv');
 
         fprintf('\n=== PIPELINE FINISHED ===\n');
         fprintf('Generated result files are in: %s\n', resultsDir);
@@ -100,20 +81,3 @@ end
 run(scriptPath);
 end
 
-function copyResult(sourceDirectory, destinationDirectory, fileName)
-sourceFile = fullfile(sourceDirectory, fileName);
-if ~isfile(sourceFile)
-    error('run_project:MissingOutput', ...
-        'Expected output was not generated: %s', sourceFile);
-end
-copyfile(sourceFile, fullfile(destinationDirectory, fileName), 'f');
-end
-
-function cleanupFullRun(workDirectory, originalDirectory)
-if isfolder(originalDirectory)
-    cd(originalDirectory);
-end
-if isfolder(workDirectory)
-    rmdir(workDirectory, 's');
-end
-end

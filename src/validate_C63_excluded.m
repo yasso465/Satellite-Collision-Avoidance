@@ -2,8 +2,12 @@
 % Requires debris_leo.tle (original) and debris_filtered.tle (original IDs).
 % Resume-safe CSV. MATLAB R2026b + Aerospace Toolbox.
 clear;clc;
-originalFile='debris_leo.tle'; filteredFile='debris_filtered.tle';
-outputFile='C63_excluded_validation.csv';
+projectRoot = fileparts(fileparts(mfilename('fullpath')));
+dataDir = fullfile(projectRoot, 'data');
+resultsDir = fullfile(projectRoot, 'results');
+originalFile = fullfile(dataDir, 'debris_leo.tle');
+filteredFile = fullfile(dataDir, 'debris_filtered.tle');
+outputFile = fullfile(resultsDir, 'C63_excluded_validation.csv');
 assert(isfile(originalFile)&&isfile(filteredFile), ...
     'Place debris_leo.tle et debris_filtered.tle dans le dossier courant.');
 orig=readlines(originalFile);orig=orig(strlength(strtrim(orig))>0);
